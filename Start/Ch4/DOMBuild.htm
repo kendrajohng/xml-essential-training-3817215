@@ -30,6 +30,16 @@
         return emailSection;
       }
 
+      function createPhoneSection(currentCard) {
+        var phoneSection = document.createElement("div");
+        phoneSection.setAttribute("class", "phone");
+        var phoneStr = document.createTextNode(
+          currentCard.getElementsByTagName("phone")[0].firstChild.data
+        );
+        phoneSection.appendChild(phoneStr);
+        return phoneSection;
+      }
+
       function createCardElement() {
         // get references to the data island and the array of business cards
         loadXMLDoc("businesscard.xml").then((xmlData) => {
@@ -46,6 +56,10 @@
           // create a <div> for the email
           var newEmail = createEmailSection(xmlData);
           newCard.appendChild(newEmail);
+
+          // create a <div> for the phone
+          var newPhone = createPhoneSection(xmlData);
+          newCard.append(newPhone);
 
           // now add the new <div> containing the card info to the web page
           document.getElementById("cardContainer").appendChild(newCard);
