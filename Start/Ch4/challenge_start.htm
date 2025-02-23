@@ -20,20 +20,10 @@
         return nameSection;
       }
 
-      function createEmailSection(currentCard) {
-        var emailSection = document.createElement("div");
-        emailSection.setAttribute("class", "email");
-        var emailStr = document.createTextNode(
-          currentCard.getElementsByTagName("email")[0].firstChild.data
-        );
-        emailSection.appendChild(emailStr);
-        return emailSection;
-      }
-
-      function createPhoneSection(currentCard) {
+      function createPhones(currentCard) {
         var phones = currentCard.getElementsByTagName("phone");
 
-        var phoneSection = document.createElement("div");
+        var phoneSect = document.createElement("div");
         for (var j = 0; j < phones.length; j++) {
           newPhone = document.createElement("div");
           newPhone.setAttribute("class", "phone");
@@ -45,23 +35,30 @@
               currentCard.getElementsByTagName("phone")[j].firstChild.data
           );
           newPhone.appendChild(phoneStr);
-          phoneSection.appendChild(newPhone);
+          phoneSect.appendChild(newPhone);
         }
-
-        return phoneSection;
+        return phoneSect;
       }
 
-      function createCardElements() {
-        // YOUR CODE GOES HERE
-        loadXMLDoc("businesscard.xml").then((xmlData) => {
-          var bizCard = xmlData.getElementsByTagName("BusinessCard");
+      function createEmailSection(currentCard) {
+        var emailSect = document.createElement("div");
+        emailSect.setAttribute("class", "email");
+        var emailStr = document.createTextNode(
+          "email: " +
+            currentCard.getElementsByTagName("email")[0].firstChild.data
+        );
+        emailSect.appendChild(emailStr);
+        return emailSect;
+      }
 
-          // loop over the tags and create a new <div> to
-          // each card along with the info for all fields
+      function createBizCards(xmlData) {
+        // get references to the data island and the array of business cards
+        var bizCards = xmlData.getElementsByTagName("BusinessCard");
 
-          for (var i = 0; i < bizCard.length; i++) {
-            var currentCard = bizCard[i]; //store a reference to the current <BusinessCard>
-          }
+        // for each business card, loop over its tags and create a new <div> to
+        // each card along with the information for all the fields
+        for (var i = 0; i < bizCards.length; i++) {
+          var currentCard = bizCards[i]; // store a reference to the current <BusinessCard>
 
           // make a new <div> for the whole card
           var newCard = document.createElement("div");
@@ -71,16 +68,21 @@
           var newName = createNameSection(currentCard);
           newCard.appendChild(newName);
 
+          // create a <div> for the phones
+          var newPhone = createPhones(currentCard);
+          newCard.appendChild(newPhone);
+
           // create a <div> for the email
           var newEmail = createEmailSection(currentCard);
           newCard.appendChild(newEmail);
 
-          // create a <div> for the phone
-          var newPhone = createPhoneSection(currentCard);
-          newCard.append(newPhone);
-
+          // now add the new <div> containing the card info to the web page
           document.getElementById("cardContainer").appendChild(newCard);
-        });
+        }
+      }
+
+      function createCardElements() {
+        loadXMLDoc("challenge.xml").then((xml) => createBizCards(xml));
       }
 
       window.addEventListener("load", function () {
