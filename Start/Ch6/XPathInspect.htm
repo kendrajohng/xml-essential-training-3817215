@@ -1,38 +1,55 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Using XPath</title>
-        <script type="text/javascript">
-            var BusinessCard;
+  <head>
+    <title>Using XPath</title>
+    <script type="text/javascript">
+      var BusinessCard;
 
-            async function loadXMLDoc(docURL) {
-                let doc = await fetch(docURL);
-                let response = await doc.text();
-                let xml = new DOMParser().parseFromString(response, "text/xml");
-                return xml;
-            }
+      async function loadXMLDoc(docURL) {
+        let doc = await fetch(docURL);
+        let response = await doc.text();
+        let xml = new DOMParser().parseFromString(response, "text/xml");
+        return xml;
+      }
 
-            function showCardData() {
-                var nameexpr = "/BusinessCard/Name";
-                var emailexpr = "/BusinessCard/email";
+      function showCardData() {
+        var nameexpr = "/BusinessCard/Name";
+        var emailexpr = "/BusinessCard/email";
 
-                // ADD CODE HERE
+        // ADD CODE HERE
+        var result = document.evaluate(
+          nameexpr,
+          BusinessCard,
+          null,
+          XPathResult.ANY_TYPE
+        );
+        var name = "Name: " + result.iterateNext().textContent;
 
-                alert("BusinessCard Data: \n\n" + name + "\n" + email);
-            }
+        var result = document.evaluate(
+          emailexpr,
+          BusinessCard,
+          null,
+          XPathResult.ANY_TYPE
+        );
+        var email = "Email: " + result.iterateNext().textContent;
 
-            window.addEventListener("load", (evt) => {
-                loadXMLDoc("businesscard.xml").then(xml => BusinessCard = xml);
+        alert("BusinessCard Data: \n\n" + name + "\n" + email);
+      }
 
-                document.getElementById("showBCardData").addEventListener("click", () => {
-                    showCardData();
-                });
-            });
-        </script>
-        <link rel="stylesheet" href="businesscard.css" />
-        <link rel="stylesheet" href="styles.css" />    
-    </head>
-    <body>
-        <button id="showBCardData">Show Business Card Data</button>
-    </body>
+      window.addEventListener("load", (evt) => {
+        loadXMLDoc("businesscard.xml").then((xml) => (BusinessCard = xml));
+
+        document
+          .getElementById("showBCardData")
+          .addEventListener("click", () => {
+            showCardData();
+          });
+      });
+    </script>
+    <link rel="stylesheet" href="businesscard.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <button id="showBCardData">Show Business Card Data</button>
+  </body>
 </html>
